@@ -1,0 +1,11 @@
+{
+  "name": "container",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "karma start"
+  },
+  "author": "Aaron Ackerman <theron17@gmail.com>",
+  "license": "MIT"
+}
