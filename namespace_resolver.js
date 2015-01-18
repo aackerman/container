@@ -1,13 +1,13 @@
 import invariant from 'invariant';
 import get from 'object-get';
-
-// TODO: include classify method
-// TODO: include get method
+import {classify} from './strings.js';
 
 class NamespaceResolver {
+
   constructor(namespace) {
     this.namespace = namespace;
   }
+
   normalize(fullName) {
     var split = fullName.split(':', 2);
     var type = split[0];
@@ -36,6 +36,7 @@ class NamespaceResolver {
 
     return type + ':' + result;
   }
+
   resolve(parsedName) {
     var parsedName = this.parseName(fullName);
     var resolveMethodName = parsedName.resolveMethodName;
@@ -55,6 +56,7 @@ class NamespaceResolver {
 
     return resolved;
   }
+
   parseName(fullName) {
     return this._parseNameCache[fullName] || (
       this._parseNameCache[fullName] = this._parseName(fullName)
@@ -78,6 +80,7 @@ class NamespaceResolver {
       resolveMethodName: 'resolve' + classify(type)
     };
   }
+
   lookupDescription(fullName) {
     return [
       this.parseName(fullName).root,
@@ -86,9 +89,11 @@ class NamespaceResolver {
       classify(parsedName.type)
     ].join('');
   }
+
   makeToString(factory) {
     return factory.toString();
   }
+
   resolveOther(parsedName) {
     var className = classify(parsedName.name) + classify(parsedName.type);
     var factory = get(parsedName.root, className);
