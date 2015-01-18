@@ -3,10 +3,6 @@ class Registry {
     this.modules = {};
   }
 
-  lookup() {
-
-  }
-
   register() {
 
   }
@@ -16,4 +12,4 @@ class Registry {
   }
 }
 
-export default Registry();
+export default Registry;
