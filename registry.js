@@ -1,12 +1,35 @@
 import invariant from 'invariant';
 
+var VALID_FULL_NAME_REGEXP = /^[^:]+.+:[^:]+$/;
+
 class Registry {
-  constructor() {
-    this.modules = {};
+  constructor(options) {
+    this.resolver = options && options.resolver ? options.resolver : function() {};
+    this.registrations = {};
+    this._resolveCache = {};
+    this._normalizeCache = {};
+    this._options = {};
   }
 
-  container: function(options) {
+  container(options) {
     return new Container(this, options);
+  }
+
+  validateFullName(fullName) {
+    if (!VALID_FULL_NAME_REGEXP.test(fullName)) {
+      throw new TypeError('Invalid Fullname, expected: `type:name` got: ' + fullName);
+    }
+    return true;
+  }
+
+  normalizeFullName(fullName) {
+    return fullName;
+  }
+
+  normalize(fullName) {
+    return this._normalizeCache[fullName] || (
+        this._normalizeCache[fullName] = this.normalizeFullName(fullName)
+      );
   }
 
   resolve(fullName) {
