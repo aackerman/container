@@ -2,7 +2,7 @@ import NamespaceResolver from './namespace_resolver.js';
 
 class Namespace {
   constructor(options) {
-    var ResolverClass = options.Resolver || NamespaceResolver;
+    var ResolverClass = (options && options.Resolver) || NamespaceResolver;
     this.Resolver = new ResolverClass(namespace);
     this.buildRegistry();
     this.buildContainer();
