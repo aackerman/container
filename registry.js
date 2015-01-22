@@ -1,14 +1,21 @@
 import invariant from 'invariant';
+import Container from './container.js';
 
 var VALID_FULL_NAME_REGEXP = /^[^:]+.+:[^:]+$/;
 
 class Registry {
   constructor(options) {
-    this.resolver = options && options.resolver ? options.resolver : function() {};
-    this.registrations = {};
-    this._resolveCache = {};
-    this._normalizeCache = {};
-    this._options = {};
+    this.resolver = (options && options.resolver)
+                  ? options.resolver
+                  : { resolve: function(){} };
+    this.registrations         = {};
+    this._resolveCache         = {};
+    this._normalizeCache       = {};
+    this._options              = {};
+    this.injections            = {};
+    this.typeInjections        = {};
+    this.factoryTypeInjections = {};
+    this.factoryInjections     = {};
   }
 
   container(options) {
@@ -20,6 +27,33 @@ class Registry {
       throw new TypeError('Invalid Fullname, expected: `type:name` got: ' + fullName);
     }
     return true;
+  }
+
+  has(fullName) {
+    invariant(
+      this.validateFullName(fullName),
+      'fullName must be a proper full name'
+    );
+    return has(this, this.normalize(fullName));
+  }
+
+  validateInjections(injections) {
+    console.log('injections', injections);
+    if (!injections) { return; }
+
+    var fullName;
+
+    for (var i = 0, length = injections.length; i < length; i++) {
+      fullName = injections[i].fullName;
+
+      if (!this.has(fullName)) {
+        throw new Error('Attempting to inject an unknown injection: `' + fullName + '`');
+      }
+    }
+  }
+
+  getOption() {
+
   }
 
   normalizeFullName(fullName) {
@@ -78,7 +112,7 @@ function resolve(registry, normalizedName) {
   var cached = registry._resolveCache[normalizedName];
   if (cached) { return cached; }
 
-  var resolved = registry.resolver(normalizedName) || registry.registrations[normalizedName];
+  var resolved = registry.resolver.resolve(normalizedName) || registry.registrations[normalizedName];
   registry._resolveCache[normalizedName] = resolved;
 
   return resolved;

@@ -6,6 +6,7 @@ class NamespaceResolver {
 
   constructor(namespace) {
     this.namespace = namespace;
+    this._parseNameCache = {};
   }
 
   normalize(fullName) {
@@ -37,7 +38,7 @@ class NamespaceResolver {
     return type + ':' + result;
   }
 
-  resolve(parsedName) {
+  resolve(fullName) {
     var parsedName = this.parseName(fullName);
     var resolveMethodName = parsedName.resolveMethodName;
     var resolved;
@@ -49,6 +50,8 @@ class NamespaceResolver {
     if (this[resolveMethodName]) {
       resolved = this[resolveMethodName](parsedName);
     }
+
+    console.log('resolve', parsedName);
 
     if (!resolved) {
       resolved = this.resolveOther(parsedName);

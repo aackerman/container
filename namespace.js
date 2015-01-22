@@ -1,9 +1,10 @@
 import NamespaceResolver from './namespace_resolver.js';
+import Registry from './registry.js';
 
 class Namespace {
   constructor(options) {
     var ResolverClass = (options && options.Resolver) || NamespaceResolver;
-    this.Resolver = new ResolverClass(namespace);
+    this.Resolver = new ResolverClass(this);
     this.buildRegistry();
     this.buildContainer();
   }
